@@ -26,6 +26,13 @@ pub fn strides_from_shape<const N: usize>(shape: &Array<N>) -> Array<N> {
     strides
 }
 
+#[inline(always)]
+pub fn flat_index_from_nd_index<const N: usize>(index: Array<N>, strides: Array<N>) -> usize {
+    index.iter()
+        .zip(strides.iter())
+        .fold(0, |a, (i, s)| a + i*s)
+}
+
 /// N-dimensional range with dimension known at compile-time.
 #[derive(Clone, Debug)]
 pub struct StaticRange<const N: usize> {
@@ -97,4 +104,8 @@ impl<const N: usize> IntoIterator for StaticRange<N> {
     fn into_iter(self) -> Self::IntoIter {
         Self::IntoIter::new(self)
     }
+}
+
+pub trait IntoNdIterator<const N: usize> {
+    fn into_nd_iter(self) -> StaticRangeIterator<N>;
 }
