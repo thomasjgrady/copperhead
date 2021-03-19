@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+	"copperhead_core",
+	"copperhead_test"
+]
