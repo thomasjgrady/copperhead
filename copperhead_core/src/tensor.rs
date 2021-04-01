@@ -77,6 +77,32 @@ where
             flat_size
         }
     }
+    
+    /// Intializes a tensor with the given shape containing the return value
+    /// of the provided closure everywhere. This differs from fill_with in
+    /// that it creates a new Tensor.
+    pub fn init_with<F>(shape: Array<N>, mut f: F) -> Self
+    where
+        F: FnMut() -> T
+    {
+
+        let mut result = unsafe { Self::empty(shape.clone()) };
+        result.fill_with(f);
+        result
+    }
+
+    /// Intializes a tensor with the given shape containing the return value
+    /// of the provided closure at each index. This differs from
+    /// fill_with_index in that it creates a new Tensor.
+    pub fn init_with_index<F>(shape: Array<N>, mut f: F) -> Self
+    where
+        F: FnMut(Array<N>) -> T
+    {
+
+        let mut result = unsafe { Self::empty(shape.clone()) };
+        result.fill_with_index(f);
+        result
+    }
 }
 
 impl<T, const N: usize> IntoNdIterator<N> for StaticTensor<T, N> {
